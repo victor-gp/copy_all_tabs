@@ -20,20 +20,20 @@
   },
   "browser_action": {
     "browser_style": true,
-    "default_title": "Copy All Tabs",
+    "default_title": "Capture All Tabs",
     "default_popup": "tabs.html"
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "@copyalltabs"
+      "id": "@capturealltabs"
     }
   },
   "web_accessible_resources": [
     "images/settings.svg"
   ],
   "manifest_version": 2,
-  "name": "Copy All Tabs",
+  "name": "Capture All Tabs",
   "version": "0.0.10",
-  "description": "Copy All Tabs is a Firefox Add-on that takes the address and title for each tab and creates a text list of links. The list is copied to your clipboard so you can paste it to notes. You can also open tabs from a previously saved list of links.",
-  "homepage_url": "https://github.com/charlesbrandt/copy_all_tabs"
+  "description": "Capture All Tabs is a Firefox Add-on that takes the address and title for each tab and creates a text list of links. The list is copied to your clipboard so you can paste it to notes. You can also open tabs from a previously saved list of links.",
+  "homepage_url": "https://github.com/charlesbrandt/capture_all_tabs"
 }
