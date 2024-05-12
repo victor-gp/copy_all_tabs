@@ -164,6 +164,7 @@ function notify(message) {
  * Applies output format to every tab and copies resultant tab list to clipboard
  */
 function copyTabs() {
+  logWindowsTabs();
   getCurrentWindowTabs().then((tabs) => {
     let tabList = "";
 
@@ -178,5 +179,11 @@ function copyTabs() {
       document.querySelector("#message").innerHTML =
         "Copied " + tabs.length + " tabs";
     });
+  });
+}
+
+function logWindowsTabs() {
+  browser.windows.getAll({populate: true}).then((windowInfoArray) => {
+    console.log(windowInfoArray);
   });
 }
