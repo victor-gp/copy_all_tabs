@@ -186,4 +186,9 @@ function logWindowsTabs() {
   browser.windows.getAll({populate: true}).then((windowInfoArray) => {
     console.log(windowInfoArray);
   });
+
+  browser.windows.getAll({populate: true}).then((windowInfoArray) => {
+    const tabCountsArray = windowInfoArray.map((window) => window.tabs.length);
+    console.log(tabCountsArray);
+  });
 }
