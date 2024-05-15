@@ -190,7 +190,8 @@ async function logWindowsTabs() {
   const aggregateWindowInfoArray = await Promise.all(
     windowInfoArray.map(async wi => ({
       count: wi.tabs.length,
-      firstVisited: await getFirstAccessed(wi),
+      firstAccessed: await getFirstAccessed(wi),
+      lastAccessed: getLastAccessed(wi),
       windowInfo: wi,
     }))
   );
@@ -215,4 +216,10 @@ async function getFirstVisit(url) {
   const visits = await browser.history.getVisits({url: url});
   // getVisits() returns visits in reverse chronological order
   return visits.at(-1);
+}
+
+function getLastAccessed(windowInfo) {
+  const tabsLastAccessed = windowInfo.tabs.map(tab => tab.lastAccessed);
+  const latest = Math.max(...tabsLastAccessed);
+  return new Date(latest).toISOString();
 }
