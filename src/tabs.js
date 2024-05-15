@@ -219,7 +219,12 @@ async function getFirstVisit(url) {
 }
 
 function getLastAccessed(windowInfo) {
+  if (windowInfo.tabs.length < 2) return null;
+
   const tabsLastAccessed = windowInfo.tabs.map(tab => tab.lastAccessed);
-  const latest = Math.max(...tabsLastAccessed);
+  const sortedDesc = tabsLastAccessed.sort().reverse();
+  // ignore the actual latest because the active tab of the window
+  // sets its lastAccessed property to the current time
+  const latest = sortedDesc[1];
   return new Date(latest).toISOString();
 }
