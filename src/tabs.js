@@ -209,7 +209,7 @@ async function getFirstAccessed(windowInfo) {
       earliest = visit.visitTime;
     }
   }
-  return new Date(earliest).toISOString();
+  return toISOStringDatePart(new Date(earliest));
 }
 
 async function getFirstVisit(url) {
@@ -226,5 +226,14 @@ function getLastAccessed(windowInfo) {
   // ignore the actual latest because the active tab of the window
   // sets its lastAccessed property to the current time
   const latest = sortedDesc[1];
-  return new Date(latest).toISOString();
+  return toISOStringDatePart(new Date(latest));
+}
+
+//nice: represent it in the system's timezone, not UTC
+function toISOStringDatePart(date) {
+  // e.g.: "2024-04-26T13:39:27.359Z"
+  const isoString = date.toISOString();
+  // e.g.: "2024-04-26"
+  const datePart = isoString.split('T')[0];
+  return datePart;
 }
