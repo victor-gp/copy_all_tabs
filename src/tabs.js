@@ -160,11 +160,14 @@ function notify(message) {
   browser.tabs.create({ url: message.url });
 }
 
+function copyTabs() {
+  logWindowsTabs().then(prevCopyTabs);
+}
+
 /**
  * Applies output format to every tab and copies resultant tab list to clipboard
  */
-function copyTabs() {
-  logWindowsTabs();
+function prevCopyTabs() {
   getCurrentWindowTabs().then((tabs) => {
     let tabList = "";
 
@@ -182,13 +185,34 @@ function copyTabs() {
   });
 }
 
-function logWindowsTabs() {
-  browser.windows.getAll({populate: true}).then((windowInfoArray) => {
-    console.log(windowInfoArray);
-  });
+async function logWindowsTabs() {
+  const windowInfoArray = await browser.windows.getAll({populate: true});
+  const aggregateWindowInfoArray = await Promise.all(
+    windowInfoArray.map(async wi => ({
+      count: wi.tabs.length,
+      firstVisited: await getFirstAccessed(wi),
+      windowInfo: wi,
+    }))
+  );
+  console.log(aggregateWindowInfoArray);
+}
 
-  browser.windows.getAll({populate: true}).then((windowInfoArray) => {
-    const tabCountsArray = windowInfoArray.map((window) => window.tabs.length);
-    console.log(tabCountsArray);
-  });
+async function getFirstAccessed(windowInfo) {
+  let earliest = Date.now();
+  for (const tab of windowInfo.tabs) {
+    const url = tab.url;
+    const visit = await getFirstVisit(url);
+    //nice: handle these cases better. why undefined?
+    if (visit === undefined) continue;
+    if (visit.visitTime < earliest) {
+      earliest = visit.visitTime;
+    }
+  }
+  return new Date(earliest).toISOString();
+}
+
+async function getFirstVisit(url) {
+  const visits = await browser.history.getVisits({url: url});
+  // getVisits() returns visits in reverse chronological order
+  return visits.at(-1);
 }
