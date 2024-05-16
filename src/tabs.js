@@ -192,6 +192,7 @@ async function logWindowsTabs() {
       count: wi.tabs.length,
       firstAccessed: await getFirstAccessed(wi),
       lastAccessed: getLastAccessed(wi),
+      tabs: getTabsInfo(wi),
       windowInfo: wi,
     }))
   );
@@ -236,4 +237,11 @@ function toISOStringDatePart(date) {
   // e.g.: "2024-04-26"
   const datePart = isoString.split('T')[0];
   return datePart;
+}
+
+function getTabsInfo(windowInfo) {
+  return windowInfo.tabs.map((tab) => ({
+    title: tab.title,
+    url: tab.url,
+  }));
 }
