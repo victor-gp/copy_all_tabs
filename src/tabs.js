@@ -197,6 +197,8 @@ async function logWindowsTabs() {
     }))
   );
   console.log(aggregateWindowInfoArray);
+  const txtOutput = toTxt(aggregateWindowInfoArray);
+  console.log(txtOutput);
 }
 
 async function getFirstAccessed(windowInfo) {
@@ -246,4 +248,16 @@ function getTabsInfo(windowInfo) {
     active: tab.active,
     pinned: tab.pinned,
   }));
+}
+
+function toTxt(aggWindowInfoArray) {
+  const txt = aggWindowInfoArray.reduce(
+    (prev, aggWI) => prev + `> from ${aggWI.firstAccessed} to ${aggWI.lastAccessed || '?'}` + '\n' + tabsToTxt(aggWI.tabs) + '\n\n',
+    ''
+  );
+  return txt;
+}
+
+function tabsToTxt(tabsInfo) {
+  return tabsInfo.map(ti => `${ti.title}\n ${ti.url}`).join('\n');
 }
