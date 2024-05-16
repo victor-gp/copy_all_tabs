@@ -199,6 +199,8 @@ async function logWindowsTabs() {
   console.log(aggregateWindowInfoArray);
   const txtOutput = toTxt(aggregateWindowInfoArray);
   console.log(txtOutput);
+  const mdOutput = toMarkdown(aggregateWindowInfoArray);
+  console.log(mdOutput);
 }
 
 async function getFirstAccessed(windowInfo) {
@@ -252,12 +254,28 @@ function getTabsInfo(windowInfo) {
 
 function toTxt(aggWindowInfoArray) {
   const txt = aggWindowInfoArray.reduce(
-    (prev, aggWI) => prev + `> from ${aggWI.firstAccessed} to ${aggWI.lastAccessed || '?'}` + '\n' + tabsToTxt(aggWI.tabs) + '\n\n',
+    (prev, aggWI) => prev + windowHeading(aggWI) + '\n' + tabsToTxt(aggWI.tabs) + '\n\n',
     ''
   );
   return txt;
 }
 
+function toMarkdown(aggWindowInfoArray) {
+  const windowOutputs = aggWindowInfoArray.map(
+    aggWI => windowHeading(aggWI) + '\n\n' + tabsToMarkdown(aggWI.tabs)
+  );
+  return windowOutputs.join('\n\n');
+}
+
+function windowHeading(aggWindowInfo) {
+  return `> from ${aggWindowInfo.firstAccessed} to ${aggWindowInfo.lastAccessed || '?'}`;
+}
+
 function tabsToTxt(tabsInfo) {
   return tabsInfo.map(ti => `${ti.title}\n ${ti.url}`).join('\n');
+}
+
+//nice: active tab in bold
+function tabsToMarkdown(tabsInfo) {
+  return tabsInfo.map(ti => `- [${ti.title}](${ti.url})`).join('\n');
 }
