@@ -201,6 +201,8 @@ async function logWindowsTabs() {
   console.log(txtOutput);
   const mdOutput = toMarkdown(aggregateWindowInfoArray);
   console.log(mdOutput);
+  const logseqOutput = toLogseq(aggregateWindowInfoArray);
+  console.log(logseqOutput);
 }
 
 async function getFirstAccessed(windowInfo) {
@@ -267,8 +269,22 @@ function toMarkdown(aggWindowInfoArray) {
   return windowOutputs.join('\n\n');
 }
 
+//todo: should paste to Logseq just right
+function toLogseq(aggWindowInfoArray) {
+  const windowOutputs = aggWindowInfoArray.map(
+    aggWI => windowHeadingLogseq(aggWI) + '\n' + tabsToMarkdown(aggWI.tabs)
+  );
+  return windowOutputs.join('\n\n');
+}
+
 function windowHeading(aggWindowInfo) {
   return `> from ${aggWindowInfo.firstAccessed} to ${aggWindowInfo.lastAccessed || '?'}`;
+}
+
+// on top of the basic heading, surrounds the dates with page brackets [[...]]
+function windowHeadingLogseq(aggWindowInfo) {
+  const last = aggWindowInfo.lastAccessed ? `[[${aggWindowInfo.lastAccessed}]]` : '?';
+  return `from [[${aggWindowInfo.firstAccessed}]] to ${last}`;
 }
 
 function tabsToTxt(tabsInfo) {
