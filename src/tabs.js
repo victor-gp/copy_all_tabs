@@ -243,5 +243,7 @@ function getTabsInfo(windowInfo) {
   return windowInfo.tabs.map((tab) => ({
     title: tab.title,
     url: tab.url,
+    active: tab.active,
+    pinned: tab.pinned,
   }));
 }
