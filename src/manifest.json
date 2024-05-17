@@ -1,7 +1,7 @@
 {
   "icons": {
-    "48": "icons/icon-bw.svg",
-    "96": "icons/icon-bw.svg"
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
   },
   "permissions": [
     "storage",

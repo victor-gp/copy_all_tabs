@@ -1,4 +1,4 @@
-browser.browserAction.setIcon({ path: "icons/icon-bw.svg" });
+browser.browserAction.setIcon({ path: "icons/icon.svg" });
 
 function updateTabCount(tabId, isOnRemoved) {
   browser.storage.sync.get().then((res) => {
