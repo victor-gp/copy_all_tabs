@@ -128,6 +128,12 @@ document.addEventListener("click", (e) => {
       browser.tabs.sendMessage(tab.id, {'action': 'paste'})
     })
     */
+  } else if (e.target.id === "tabs-capture-txt") {
+    // sync capture handler with options
+  } else if (e.target.id === "tabs-capture-md") {
+    // sync capture handler with options
+  } else if (e.target.id === "tabs-capture-logseq") {
+    // sync capture handler with options
   } else if (e.target.id === "open-settings") {
     // console.log("Open Settings called");
     browser.tabs.create({ url: "settings.html" });
