@@ -36,5 +36,5 @@
   "name": "Capture All Tabs",
   "version": "0.0.10",
   "description": "Capture All Tabs is a Firefox Add-on that takes the address and title for each tab and creates a text list of links. The list is copied to your clipboard so you can paste it to notes. You can also open tabs from a previously saved list of links.",
-  "homepage_url": "https://github.com/charlesbrandt/capture_all_tabs"
+  "homepage_url": "https://github.com/victor-gp/copy_all_tabs"
 }
