@@ -129,11 +129,11 @@ document.addEventListener("click", (e) => {
     })
     */
   } else if (e.target.id === "tabs-capture-txt") {
-    // sync capture handler with options
+    captureTabs('txt');
   } else if (e.target.id === "tabs-capture-md") {
-    // sync capture handler with options
+    captureTabs('md');
   } else if (e.target.id === "tabs-capture-logseq") {
-    // sync capture handler with options
+    captureTabs('logseq');
   } else if (e.target.id === "open-settings") {
     // console.log("Open Settings called");
     browser.tabs.create({ url: "settings.html" });
@@ -166,14 +166,10 @@ function notify(message) {
   browser.tabs.create({ url: message.url });
 }
 
-function copyTabs() {
-  logWindowsTabs().then(prevCopyTabs);
-}
-
 /**
  * Applies output format to every tab and copies resultant tab list to clipboard
  */
-function prevCopyTabs() {
+function copyTabs() {
   getCurrentWindowTabs().then((tabs) => {
     let tabList = "";
 
@@ -191,24 +187,43 @@ function prevCopyTabs() {
   });
 }
 
-async function logWindowsTabs() {
+function captureTabs(format, all=true) {
+  captureAllTabsAsync(format, all).then();
+}
+
+async function captureAllTabsAsync(format) {
   const windowInfoArray = await browser.windows.getAll({populate: true});
-  const aggregateWindowInfoArray = await Promise.all(
-    windowInfoArray.map(async wi => ({
-      count: wi.tabs.length,
-      firstAccessed: await getFirstAccessed(wi),
-      lastAccessed: getLastAccessed(wi),
-      tabs: getTabsInfo(wi),
-      windowInfo: wi,
-    }))
-  );
-  console.log(aggregateWindowInfoArray);
-  const txtOutput = toTxt(aggregateWindowInfoArray);
-  console.log(txtOutput);
-  const mdOutput = toMarkdown(aggregateWindowInfoArray);
-  console.log(mdOutput);
-  const logseqOutput = toLogseq(aggregateWindowInfoArray);
-  console.log(logseqOutput);
+  const windowAggregateInfoArray = await Promise.all(windowInfoArray.map(extractInfo));
+  console.log(windowAggregateInfoArray);
+  const formattedOutput = formatInfo(windowAggregateInfoArray, format);
+  console.log(formattedOutput);
+  //todo: copy to clipboard (see OG code)
+}
+
+async function extractInfo(windowInfo) {
+  const count = windowInfo.tabs.length;
+  const firstAccessed = await getFirstAccessed(windowInfo);
+  const lastAccessed = getLastAccessed(windowInfo);
+  const tabs = getTabsInfo(windowInfo);
+
+  return {
+    count,
+    firstAccessed,
+    lastAccessed,
+    tabs,
+    windowInfo,
+  };
+}
+
+function formatInfo(windowAggregateInfoArray, format) {
+  switch(format) {
+    case 'txt':
+      return toTxt(windowAggregateInfoArray);
+    case 'md':
+      return toMarkdown(windowAggregateInfoArray);
+    case 'logseq':
+      return toLogseq(windowAggregateInfoArray);
+  }
 }
 
 async function getFirstAccessed(windowInfo) {
