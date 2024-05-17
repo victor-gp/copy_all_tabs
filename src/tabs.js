@@ -231,7 +231,7 @@ async function getFirstAccessed(windowInfo) {
   for (const tab of windowInfo.tabs) {
     const url = tab.url;
     const visit = await getFirstVisit(url);
-    //nice: handle these cases better. why undefined?
+    //fixme: handle these cases better. why undefined?
     if (visit === undefined) continue;
     if (visit.visitTime < earliest) {
       earliest = visit.visitTime;
@@ -257,6 +257,7 @@ function getLastAccessed(windowInfo) {
   return toISOStringDatePart(new Date(latest));
 }
 
+//todo: use this at representation time, not data extraction time
 //nice: represent it in the system's timezone, not UTC
 function toISOStringDatePart(date) {
   // e.g.: "2024-04-26T13:39:27.359Z"
