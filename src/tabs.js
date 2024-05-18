@@ -310,12 +310,21 @@ function windowHeadingLogseq(aggWindowInfo) {
 }
 
 function tabsToTxt(tabsInfo) {
-  return tabsInfo.map(ti => `${ti.title}\n ${ti.url}`).join('\n');
+  const tabLines = tabsInfo.map(ti => {
+    let titleLine = ti.title;
+    if (ti.active) titleLine = '** ' + titleLine;
+    let urlLine = ' ' + ti.url;
+    return titleLine + '\n' + urlLine;
+  });
+  return tabLines.join('\n');
 }
 
-//nice: active tab in bold
 function tabsToMarkdown(tabsInfo) {
-  return tabsInfo.map(ti => `- [${ti.title}](${ti.url})`).join('\n');
+  const tabLines = tabsInfo.map(ti => ti.active
+    ? `- **[${ti.title}](${ti.url})**`
+    : `- [${ti.title}](${ti.url})`
+  );
+  return tabLines.join('\n');
 }
 
 function indent(text, indentation = '\t') {
