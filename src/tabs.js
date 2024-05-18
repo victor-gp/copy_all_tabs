@@ -195,9 +195,9 @@ async function captureAllTabsAsync(format) {
   const windowInfoArray = await browser.windows.getAll({populate: true});
   const windowAggregateInfoArray = await Promise.all(windowInfoArray.map(extractInfo));
   console.log(windowAggregateInfoArray);
-  const formattedOutput = formatInfo(windowAggregateInfoArray, format);
-  console.log(formattedOutput);
-  //todo: copy to clipboard (see OG code)
+  const output = formatInfo(windowAggregateInfoArray, format);
+  browser.runtime.sendMessage({ content: output });
+  document.querySelector("#message").innerHTML = "Copied all tabs & windows";
 }
 
 async function extractInfo(windowInfo) {
