@@ -237,7 +237,7 @@ async function getFirstAccessed(windowInfo) {
       earliest = visit.visitTime;
     }
   }
-  return toISOStringDatePart(new Date(earliest));
+  return new Date(earliest);
 }
 
 async function getFirstVisit(url) {
@@ -254,10 +254,9 @@ function getLastAccessed(windowInfo) {
   // ignore the actual latest because the active tab of the window
   // sets its lastAccessed property to the current time
   const latest = sortedDesc[1];
-  return toISOStringDatePart(new Date(latest));
+  return new Date(latest);
 }
 
-//todo: use this at representation time, not data extraction time
 //nice: represent it in the system's timezone, not UTC
 function toISOStringDatePart(date) {
   // e.g.: "2024-04-26T13:39:27.359Z"
@@ -299,16 +298,24 @@ function toLogseq(aggWindowInfoArray) {
 }
 
 function windowHeading(aggWindowInfo) {
-  return `> from ${aggWindowInfo.firstAccessed} to ${aggWindowInfo.lastAccessed || '?'}`;
+  const firstStr = toISOStringDatePart(aggWindowInfo.firstAccessed);
+  const last = aggWindowInfo.lastAccessed; // can be null
+  const lastStr = last ? toISOStringDatePart(last) : '?';
+  const tabCount = aggWindowInfo.tabs.length;
+  const tabCountStr = tabCount <= 3 ? '' : `, ${tabCount} tabs`;
+
+  return `> from ${firstStr} to ${lastStr}${tabCountStr}`;
 }
 
 // on top of the basic heading, surrounds the dates with page brackets [[...]]
 function windowHeadingLogseq(aggWindowInfo) {
-  const last = aggWindowInfo.lastAccessed ? `[[${aggWindowInfo.lastAccessed}]]` : '?';
+  const firstStr = '[[' + toISOStringDatePart(aggWindowInfo.firstAccessed) + ']]';
+  const last = aggWindowInfo.lastAccessed; // can be null
+  const lastStr = last ? '[[' + toISOStringDatePart(last) + ']]' : '?';
   const tabCount = aggWindowInfo.tabs.length;
   const tabCountStr = tabCount <= 3 ? '' : `, ${tabCount} tabs`;
 
-  return `- from [[${aggWindowInfo.firstAccessed}]] to ${last}${tabCountStr}`;
+  return `- from ${firstStr} to ${lastStr}${tabCountStr}`;
 }
 
 function tabsToTxt(tabsInfo) {
