@@ -298,7 +298,6 @@ function toLogseq(aggWindowInfoArray) {
   return windowOutputs.join('\n');
 }
 
-//tbd: add the tabs count?
 function windowHeading(aggWindowInfo) {
   return `> from ${aggWindowInfo.firstAccessed} to ${aggWindowInfo.lastAccessed || '?'}`;
 }
@@ -306,7 +305,10 @@ function windowHeading(aggWindowInfo) {
 // on top of the basic heading, surrounds the dates with page brackets [[...]]
 function windowHeadingLogseq(aggWindowInfo) {
   const last = aggWindowInfo.lastAccessed ? `[[${aggWindowInfo.lastAccessed}]]` : '?';
-  return `- from [[${aggWindowInfo.firstAccessed}]] to ${last}`;
+  const tabCount = aggWindowInfo.tabs.length;
+  const tabCountStr = tabCount <= 3 ? '' : `, ${tabCount} tabs`;
+
+  return `- from [[${aggWindowInfo.firstAccessed}]] to ${last}${tabCountStr}`;
 }
 
 function tabsToTxt(tabsInfo) {
