@@ -291,14 +291,14 @@ function toMarkdown(aggWindowInfoArray) {
   return windowOutputs.join('\n\n');
 }
 
-//todo: should paste to Logseq just right
 function toLogseq(aggWindowInfoArray) {
   const windowOutputs = aggWindowInfoArray.map(
-    aggWI => windowHeadingLogseq(aggWI) + '\n' + tabsToMarkdown(aggWI.tabs)
+    aggWI => windowHeadingLogseq(aggWI) + '\n' + indent(tabsToMarkdown(aggWI.tabs))
   );
-  return windowOutputs.join('\n\n');
+  return windowOutputs.join('\n');
 }
 
+//tbd: add the tabs count?
 function windowHeading(aggWindowInfo) {
   return `> from ${aggWindowInfo.firstAccessed} to ${aggWindowInfo.lastAccessed || '?'}`;
 }
@@ -306,7 +306,7 @@ function windowHeading(aggWindowInfo) {
 // on top of the basic heading, surrounds the dates with page brackets [[...]]
 function windowHeadingLogseq(aggWindowInfo) {
   const last = aggWindowInfo.lastAccessed ? `[[${aggWindowInfo.lastAccessed}]]` : '?';
-  return `from [[${aggWindowInfo.firstAccessed}]] to ${last}`;
+  return `- from [[${aggWindowInfo.firstAccessed}]] to ${last}`;
 }
 
 function tabsToTxt(tabsInfo) {
@@ -316,4 +316,8 @@ function tabsToTxt(tabsInfo) {
 //nice: active tab in bold
 function tabsToMarkdown(tabsInfo) {
   return tabsInfo.map(ti => `- [${ti.title}](${ti.url})`).join('\n');
+}
+
+function indent(text, indentation = '\t') {
+  return indentation + text.replaceAll('\n', '\n' + indentation);
 }
